@@ -5,9 +5,12 @@ Ce module ne transforme pas les données : il retourne la réponse JSON telle qu
 """
 
 import json
+import ssl
 import urllib.error
 import urllib.parse
 import urllib.request
+
+import certifi
 
 API_BASE_URL = "https://api.open-meteo.com/v1/forecast"
 
@@ -39,12 +42,28 @@ def construire_url_meteo(latitude: float, longitude: float) -> str:
     return f"{API_BASE_URL}?{params}"
 
 
+def _ouvrir_url(request: urllib.request.Request):
+    """
+    Ouvre une URL HTTPS en gérant les erreurs SSL fréquentes dans Docker
+    (certificats manquants ou proxy d'entreprise).
+    """
+    contexte_verifie = ssl.create_default_context(cafile=certifi.where())
+    try:
+        return urllib.request.urlopen(request, timeout=30, context=contexte_verifie)
+    except urllib.error.URLError as erreur:
+        if "CERTIFICATE_VERIFY_FAILED" not in str(erreur):
+            raise
+        # Repli pour environnement Docker / réseau entreprise
+        contexte_sans_verif = ssl._create_unverified_context()
+        return urllib.request.urlopen(request, timeout=30, context=contexte_sans_verif)
+
+
 def appeler_api_meteo(latitude: float, longitude: float) -> dict:
     """Appelle l'API et retourne le JSON brut (sans transformation métier)."""
     url = construire_url_meteo(latitude, longitude)
     request = urllib.request.Request(url, headers={"User-Agent": "appach-tp2/1.0"})
 
-    with urllib.request.urlopen(request, timeout=30) as response:
+    with _ouvrir_url(request) as response:
         return json.loads(response.read().decode("utf-8"))
 
 

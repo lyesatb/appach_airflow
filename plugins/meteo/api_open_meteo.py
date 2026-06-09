@@ -67,15 +67,16 @@ def appeler_api_meteo(latitude: float, longitude: float) -> dict:
         return json.loads(response.read().decode("utf-8"))
 
 
-def recuperer_reponses_brutes() -> list[dict]:
+def recuperer_reponses_brutes(villes: list[dict] | None = None) -> list[dict]:
     """
-    Récupère les réponses JSON brutes pour toutes les villes configurées.
+    Récupère les réponses JSON brutes pour les villes demandées.
 
     Chaque élément contient le nom de la ville, ses coordonnées et la réponse API complète.
     """
+    villes_a_traiter = villes or VILLES_A_INGERER
     reponses = []
 
-    for ville in VILLES_A_INGERER:
+    for ville in villes_a_traiter:
         reponse_api = appeler_api_meteo(ville["latitude"], ville["longitude"])
         reponses.append(
             {

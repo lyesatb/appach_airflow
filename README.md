@@ -1,60 +1,118 @@
-# TP 2 — Créer un premier DAG Airflow
+# Appach — Projet Airflow
 
-Projet pour le TP « Créer un premier DAG Airflow » — workflow ETL en 3 tâches.
+Dépôt regroupant les travaux pratiques Airflow. **Chaque TP a son dossier et son DAG.**
+
+| TP | Sujet | DAG Airflow | Dossier livrables |
+|----|-------|-------------|-------------------|
+| **TP 1** | Premier DAG (3 tâches ETL) | `tp1_premier_dag` | `livrables/tp1/` |
+| **TP 2** | Ingestion API météo Open-Meteo | `tp2_ingestion_meteo` | `livrables/tp2/` |
+| **TP 3** | Pipeline API → PostgreSQL | `tp3_pipeline_meteo_postgresql` | `livrables/tp3/` |
 
 ## Structure du projet
 
 ```
 appach/
 ├── dags/
-│   └── tp2_premier_dag.py    # Fichier DAG (livrable)
+│   ├── tp1_premier_dag.py           # TP 1
+│   ├── tp2_ingestion_meteo_dag.py   # TP 2
+│   └── tp3_pipeline_meteo_postgresql_dag.py  # TP 3
+├── plugins/meteo/                   # Code métier TP 2 & TP 3
+│   ├── api_open_meteo.py            #   → appels API
+│   ├── transformation.py            #   → transformation
+│   └── postgres_loader.py           #   → chargement PostgreSQL (TP 3)
+├── sql/tp3/schema.sql               # Script SQL TP 3
 ├── livrables/
-│   ├── EXPLICATION_TP2.md    # Explication du fonctionnement
-│   ├── preuve_execution.md   # Preuve d'exécution (logs + API)
-│   └── preuve_execution.png  # Capture d'écran Airflow UI
-├── docker-compose.yaml       # Environnement Airflow
+│   ├── tp1/                         # Livrables TP 1
+│   │   ├── EXPLICATION.md
+│   │   ├── preuve_execution.md
+│   │   └── preuve_execution.png
+│   ├── tp2/                         # Livrables TP 2
+│   └── tp3/                         # Livrables TP 3
+├── docker-compose.yaml
 └── README.md
 ```
 
-## Démarrage rapide
+## Démarrage (commun aux deux TPs)
 
 **Prérequis :** Docker Desktop démarré.
 
 ```powershell
-# 1. Créer le dossier logs
 mkdir logs
-
-# 2. Lancer Airflow
 docker compose up -d
-
-# 3. Attendre ~1 min puis ouvrir l'interface
-# http://localhost:8080
-# Identifiants : admin / admin
+# Interface : http://localhost:8080  (admin / admin)
 ```
 
-## Exécution du DAG
+---
 
-1. Ouvrir http://localhost:8080 et se connecter (`admin` / `admin`)
-2. Activer le DAG `tp2_premier_dag` (interrupteur à gauche)
-3. Cliquer sur **Trigger DAG** (icône ▶) pour lancer manuellement
-4. Ouvrir le DAG → onglet **Graph** pour voir les 3 tâches enchaînées
-5. Cliquer sur une tâche → **Log** pour consulter les logs
+## TP 1 — Premier DAG Airflow
 
-### Lancer via la ligne de commande
+**Objectif :** Créer un DAG simple avec 3 tâches et des dépendances explicites.
 
+**Workflow :**
+```
+extraire_donnees >> transformer_donnees >> charger_resultat
+```
+
+**Fichiers :**
+- DAG : `dags/tp1_premier_dag.py`
+- Livrables : `livrables/tp1/`
+
+**Lancer :**
 ```powershell
-docker compose exec airflow-scheduler airflow dags trigger tp2_premier_dag
+docker compose exec airflow-scheduler airflow dags trigger tp1_premier_dag
 ```
 
-## Livrables TP
+---
 
-| Livrable | Fichier |
-|----------|---------|
-| Fichier DAG Python | `dags/tp2_premier_dag.py` |
-| Preuve d'exécution | `livrables/preuve_execution.png` + `preuve_execution.md` |
-| Explication | `livrables/EXPLICATION_TP2.md` |
+## TP 2 — Ingestion API météo
 
-## Arrêt de l'environnement
+**Objectif :** Récupérer la météo de Paris, Lyon et Marseille via [Open-Meteo](https://open-meteo.com/), séparer récupération API et transformation.
+
+**Workflow :**
+```
+recuperer_meteo_api >> preparer_donnees_meteo >> exporter_apercu_donnees
+```
+
+| Tâche | Rôle | Module |
+|-------|------|--------|
+| `recuperer_meteo_api` | JSON brut depuis l'API | `plugins/meteo/api_open_meteo.py` |
+| `preparer_donnees_meteo` | Structure table cible | `plugins/meteo/transformation.py` |
+| `exporter_apercu_donnees` | Export JSON livrables | DAG |
+
+**Fichiers :**
+- DAG : `dags/tp2_ingestion_meteo_dag.py`
+- Livrables : `livrables/tp2/`
+
+**Lancer :**
+```powershell
+docker compose exec airflow-scheduler airflow dags trigger tp2_ingestion_meteo
+```
+
+---
+
+## TP 3 — Pipeline API → PostgreSQL
+
+**Objectif :** Pipeline complet Open-Meteo → transformation → PostgreSQL + table de suivi. DAG **paramétrable**.
+
+**Workflow :**
+```
+recuperer_meteo_api >> transformer_donnees_meteo >> charger_postgresql
+    >> journaliser_ingestion >> exporter_preuve_chargement
+```
+
+**Fichiers :**
+- DAG : `dags/tp3_pipeline_meteo_postgresql_dag.py`
+- SQL : `sql/tp3/schema.sql`
+- Livrables : `livrables/tp3/`
+
+**Lancer :**
+```powershell
+docker compose exec airflow-scheduler airflow dags trigger tp3_pipeline_meteo_postgresql
+```
+
+---
+
+## Arrêt
 
 ```powershell
 docker compose down

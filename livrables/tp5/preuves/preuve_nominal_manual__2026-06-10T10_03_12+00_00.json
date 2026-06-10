@@ -1,0 +1,132 @@
+{
+  "meteo_courant": [
+    {
+      "ville": "Lyon",
+      "date_releve": "2026-06-10T12:00:00",
+      "temperature_celsius": 18.1,
+      "dag_run_id": "manual__2026-06-10T10:03:12+00:00"
+    },
+    {
+      "ville": "Marseille",
+      "date_releve": "2026-06-10T12:00:00",
+      "temperature_celsius": 22.6,
+      "dag_run_id": "manual__2026-06-10T10:03:12+00:00"
+    },
+    {
+      "ville": "Paris",
+      "date_releve": "2026-06-10T12:00:00",
+      "temperature_celsius": 15.7,
+      "dag_run_id": "manual__2026-06-10T10:03:12+00:00"
+    },
+    {
+      "ville": "Lyon",
+      "date_releve": "2026-06-10T11:45:00",
+      "temperature_celsius": 18.0,
+      "dag_run_id": "manual__2026-06-10T09:54:16+00:00"
+    },
+    {
+      "ville": "Marseille",
+      "date_releve": "2026-06-10T11:45:00",
+      "temperature_celsius": 22.3,
+      "dag_run_id": "manual__2026-06-10T09:54:16+00:00"
+    },
+    {
+      "ville": "Paris",
+      "date_releve": "2026-06-10T11:45:00",
+      "temperature_celsius": 15.7,
+      "dag_run_id": "manual__2026-06-10T09:54:16+00:00"
+    },
+    {
+      "ville": "Lyon",
+      "date_releve": "2026-06-10T10:30:00",
+      "temperature_celsius": 17.6,
+      "dag_run_id": "manual__2026-06-10T08:31:53+00:00"
+    },
+    {
+      "ville": "Marseille",
+      "date_releve": "2026-06-10T10:30:00",
+      "temperature_celsius": 21.3,
+      "dag_run_id": "manual__2026-06-10T08:31:53+00:00"
+    },
+    {
+      "ville": "Paris",
+      "date_releve": "2026-06-10T10:30:00",
+      "temperature_celsius": 14.8,
+      "dag_run_id": "manual__2026-06-10T08:31:53+00:00"
+    }
+  ],
+  "suivi_ingestion": [
+    {
+      "dag_run_id": "manual__2026-06-10T10:03:12+00:00",
+      "statut": "success",
+      "nb_lignes_chargees": 3,
+      "nb_anomalies": 0,
+      "mode_execution": "nominal",
+      "date_ingestion": "2026-06-10T10:03:39.075867+00:00"
+    },
+    {
+      "dag_run_id": "manual__2026-06-10T09:56:15+00:00",
+      "statut": "anomalie_qualite",
+      "nb_lignes_chargees": 0,
+      "nb_anomalies": 1,
+      "mode_execution": "anomalie_simulee",
+      "date_ingestion": "2026-06-10T09:56:43.911939+00:00"
+    },
+    {
+      "dag_run_id": "manual__2026-06-10T09:54:16+00:00",
+      "statut": "success",
+      "nb_lignes_chargees": 3,
+      "nb_anomalies": 0,
+      "mode_execution": "nominal",
+      "date_ingestion": "2026-06-10T09:54:39.184303+00:00"
+    },
+    {
+      "dag_run_id": "manual__2026-06-10T09:49:48+00:00",
+      "statut": "success",
+      "nb_lignes_chargees": 3,
+      "nb_anomalies": 0,
+      "mode_execution": "nominal",
+      "date_ingestion": "2026-06-10T09:50:29.499562+00:00"
+    },
+    {
+      "dag_run_id": "manual__2026-06-10T08:36:07+00:00",
+      "statut": "anomalie_qualite",
+      "nb_lignes_chargees": 0,
+      "nb_anomalies": 1,
+      "mode_execution": "anomalie_simulee",
+      "date_ingestion": "2026-06-10T08:36:33.502661+00:00"
+    },
+    {
+      "dag_run_id": "manual__2026-06-10T08:31:53+00:00",
+      "statut": "success",
+      "nb_lignes_chargees": 3,
+      "nb_anomalies": 0,
+      "mode_execution": "nominal",
+      "date_ingestion": "2026-06-10T08:32:24.403319+00:00"
+    }
+  ],
+  "anomalies_qualite": [
+    {
+      "dag_run_id": "manual__2026-06-10T09:56:15+00:00",
+      "ville": "Paris",
+      "champ": "temperature_celsius",
+      "valeur": "999.0",
+      "regle": "doit être entre -50.0 et 60.0",
+      "date_detection": "2026-06-10T09:56:42.163453+00:00"
+    },
+    {
+      "dag_run_id": "manual__2026-06-10T08:36:07+00:00",
+      "ville": "Paris",
+      "champ": "temperature_celsius",
+      "valeur": "999.0",
+      "regle": "doit être entre -50.0 et 60.0",
+      "date_detection": "2026-06-10T08:36:32.035714+00:00"
+    }
+  ],
+  "total_lignes_meteo_courant": 9,
+  "idempotence": {
+    "total_lignes": 9,
+    "doublons_detectes": 0
+  },
+  "simuler_anomalie": false
+}

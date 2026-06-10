@@ -1,5 +1,2 @@
-logs/
-*.pyc
-__pycache__/
-.env
-.DS_Store
+livrables/tp5/archives/**/*
+!livrables/tp5/archives/.gitkeep

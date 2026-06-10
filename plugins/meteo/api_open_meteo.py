@@ -73,7 +73,9 @@ def recuperer_reponses_brutes(villes: list[dict] | None = None) -> list[dict]:
 
     Chaque élément contient le nom de la ville, ses coordonnées et la réponse API complète.
     """
-    villes_a_traiter = villes or VILLES_A_INGERER
+    from meteo.utils import normaliser_villes
+
+    villes_a_traiter = normaliser_villes(villes, VILLES_A_INGERER)
     reponses = []
 
     for ville in villes_a_traiter:

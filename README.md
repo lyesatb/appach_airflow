@@ -4,35 +4,38 @@ Dépôt regroupant les travaux pratiques Airflow. **Chaque TP a son dossier et s
 
 | TP | Sujet | DAG Airflow | Dossier livrables |
 |----|-------|-------------|-------------------|
-| **TP 1** | Premier DAG (3 tâches ETL) | `tp1_premier_dag` | `livrables/tp1/` |
+| **TP 1** | Premier DAG (3 tâches ETL) | `tp2_premier_dag` | `livrables/` |
 | **TP 2** | Ingestion API météo Open-Meteo | `tp2_ingestion_meteo` | `livrables/tp2/` |
 | **TP 3** | Pipeline API → PostgreSQL | `tp3_pipeline_meteo_postgresql` | `livrables/tp3/` |
+| **TP 5** | Pipeline industrialisé | `tp5_pipeline_industrialise` | `livrables/tp5/` |
 
 ## Structure du projet
 
 ```
 appach/
 ├── dags/
-│   ├── tp1_premier_dag.py           # TP 1
-│   ├── tp2_ingestion_meteo_dag.py   # TP 2
-│   └── tp3_pipeline_meteo_postgresql_dag.py  # TP 3
-├── plugins/meteo/                   # Code métier TP 2 & TP 3
-│   ├── api_open_meteo.py            #   → appels API
-│   ├── transformation.py            #   → transformation
-│   └── postgres_loader.py           #   → chargement PostgreSQL (TP 3)
-├── sql/tp3/schema.sql               # Script SQL TP 3
+│   ├── tp2_premier_dag.py                  # TP 1
+│   ├── tp2_ingestion_meteo_dag.py          # TP 2
+│   ├── tp3_pipeline_meteo_postgresql_dag.py # TP 3
+│   └── tp5_pipeline_industrialise_dag.py   # TP 5
+├── plugins/meteo/                            # Code métier TP 2, 3 & 5
+│   ├── api_open_meteo.py
+│   ├── transformation.py
+│   ├── postgres_loader.py                    # TP 3
+│   ├── utils.py
+│   └── tp5/                                  # TP 5
+├── sql/
+│   ├── tp3/schema.sql
+│   └── tp5/schema.sql
 ├── livrables/
-│   ├── tp1/                         # Livrables TP 1
-│   │   ├── EXPLICATION.md
-│   │   ├── preuve_execution.md
-│   │   └── preuve_execution.png
-│   ├── tp2/                         # Livrables TP 2
-│   └── tp3/                         # Livrables TP 3
+│   ├── tp2/
+│   ├── tp3/
+│   └── tp5/
 ├── docker-compose.yaml
 └── README.md
 ```
 
-## Démarrage (commun aux deux TPs)
+## Démarrage (commun à tous les TPs)
 
 **Prérequis :** Docker Desktop démarré.
 
@@ -54,12 +57,12 @@ extraire_donnees >> transformer_donnees >> charger_resultat
 ```
 
 **Fichiers :**
-- DAG : `dags/tp1_premier_dag.py`
-- Livrables : `livrables/tp1/`
+- DAG : `dags/tp2_premier_dag.py`
+- Livrables : `livrables/EXPLICATION_TP2.md`, `preuve_execution.*`
 
 **Lancer :**
 ```powershell
-docker compose exec airflow-scheduler airflow dags trigger tp1_premier_dag
+docker compose exec airflow-scheduler airflow dags trigger tp2_premier_dag
 ```
 
 ---
@@ -108,6 +111,20 @@ recuperer_meteo_api >> transformer_donnees_meteo >> charger_postgresql
 **Lancer :**
 ```powershell
 docker compose exec airflow-scheduler airflow dags trigger tp3_pipeline_meteo_postgresql
+```
+
+---
+
+## TP 5 — Pipeline industrialisé
+
+**Objectif :** Pipeline complet avec archivage, qualité, branchement, PostgreSQL idempotent, traçabilité.
+
+**DAG :** `tp5_pipeline_industrialise`  
+**Doc complète :** `livrables/tp5/README.md`  
+**Captures + push :** `livrables/tp5/INSTRUCTIONS_CAPTURES.md`
+
+```powershell
+docker compose exec airflow-scheduler airflow dags trigger tp5_pipeline_industrialise
 ```
 
 ---
